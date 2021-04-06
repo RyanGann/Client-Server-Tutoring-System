@@ -39,7 +39,7 @@ def regact():
 def edact():
     print("edit account")
 
-def viewtutors():
+def vtut():
     print("view tutors")
 
 def aapt():
