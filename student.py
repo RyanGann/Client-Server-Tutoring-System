@@ -11,8 +11,8 @@ def stuff():   #note change this name
         cmd = (input('> '))
         #version1.clear_screen()
         if cmd == "regact":
-            regact()
-        elif cmd == "edact":   #this was not on overleaf doc
+            regact('date', 'subject', 'tutor')   # note these are just placeholder parameters
+        elif cmd == "edact":                     # this was not on overleaf doc
             editacct()
         elif cmd == "vtut":
             vtut()
@@ -42,7 +42,18 @@ def edact():
 def vtut():
     print("view tutors")
 
-def aapt():
+def aapt(date, subject, tutor):
+    data = {}
+    data['appointment'] = []
+    data['appointment'].append({
+        'date': date,
+        'subject': subject,
+        'tutor': tutor
+    })
+
+    with open('newApt.txt', 'w') as outfile:
+        json.dump(data, outfile)
+
     print("Appointment has been added and scheduled")
 
 def edapt():
