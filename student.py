@@ -1,48 +1,23 @@
 #list of commands
 
-
+import json
 import sys
 import os
-#import version1
+import smtplib, ssl
 
-def stuff():   #note change this name
-    cmd = ""
-    while cmd != "exit":
-        cmd = (input('> '))
-        #version1.clear_screen()
-        if cmd == "regact":
-            regact('date', 'subject', 'tutor')   # note these are just placeholder parameters
-        elif cmd == "edact":                     # this was not on overleaf doc
-            editacct()
-        elif cmd == "vtut":
-            vtut()
-        elif cmd == "aapt":
-            aapt()
-        elif cmd == "edapt":
-            edapt()
-        elif cmd == "dapt":
-            dapt()
-        elif cmd == "emcon":
-            emcon()
-        elif cmd == "emrem":
-            emrem()
-        elif cmd == "psr":
-            psr()
-        else:
-            print("invalid command")
+def registerAcct(email, password):
+    acct = {}
+    acct['user'] = []
+    acct['user'].append({
+        'email': email,
+        'password': password
+    })
+
+    with open('accounts.txt', 'w') as accounts:
+        json.dump(acct, accounts)
 
 
-
-def regact():
-    print("register account")
-
-def edact():
-    print("edit account")
-
-def vtut():
-    print("view tutors")
-
-def aapt(date, subject, tutor):
+def mkapt(date, subject, tutor):
     data = {}
     data['appointment'] = []
     data['appointment'].append({
@@ -53,20 +28,20 @@ def aapt(date, subject, tutor):
 
     with open('newApt.txt', 'w') as outfile:
         json.dump(data, outfile)
+        
+    print("Appointment has been made and scheduled")
 
-    print("Appointment has been added and scheduled")
-
-def edapt():
-    print("edit appointment")
-
-def dapt():
-    print("delete appointment")
-
-def emcon():
-    print("email confirmation")
-
-def emrem():
-    print("email reminder")
-
-def psr():
+def resetpswrd():
     print("Password has been reset")
+
+def addAppointment ():
+    print("")
+
+def emailConfirmation():
+    print("")
+              
+if __name__ == "__main__":
+    email = input("Enter an email: ")
+    password = input("Create a password: ")
+
+    registerAcct(email, password)
