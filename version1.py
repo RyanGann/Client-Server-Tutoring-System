@@ -1,4 +1,5 @@
 import os
+import getpass
 import student
 
 def clear_screen():
@@ -8,22 +9,58 @@ def clear_screen():
        _ = os.system('cls')
 
 
-if __name__ == "__main__":
-    print('********************************************************************************')
-    print('*                        University of North Alabama                           *')
-    print('*          Department of Computer Science and Information Systems              *')
-    print('********************************************************************************')
+def getHelp():
+   print("\nTo login, simply type 'login' ")
+   print("If you do not have an account, type 'regact "
+         "-yourUsername -yourPassword' ")
+   print("Otherwise, type 'exit' to close the program\n")
 
-    try:
-        cmd = (input('csis> '))
-        clear_screen()
-        cmdArray = cmd.split(" ")
-        print(cmdArray)
-        if cmdArray[0] == "mkapt":
-            student.mkapt(cmdArray[1], cmdArray[2], cmdArray[3])
-    except KeyboardInterrupt as e:
-        print(e)
-    except Exception as e:
-        print(e)
-    finally:
-        exit
+
+def login():
+   while True:
+      usr = input('\nUsername> ')
+      if not len(usr) > 0:
+         print("Username cannot be blank")
+      else:
+         break
+      
+   while True:
+      pswrd = getpass.getpass(prompt = 'Password> ')
+      if not len(pswrd) > 0:
+         print("Password cannot be blank")
+      else:
+         break
+   
+
+if __name__ == "__main__":
+   clear_screen()
+   print('********************************************************************************')
+   print('*                        University of North Alabama                           *')
+   print('*                    Tutor Appointment Management System                       *')
+   print('*                                                                              *')
+   print('*  For help type --help                                                        *')
+   print('********************************************************************************')
+
+   try:
+      cmd = (input('> '))
+      while cmd != "exit":
+         if cmd == "--help":
+            getHelp()
+
+         elif cmd == "login":
+            login()
+
+         elif cmd == "exit":
+            clear_screen()
+            exit
+       
+         elif cmd == "mkapt":
+            student.mkapt()
+         cmd = (input('> '))
+          
+   except KeyboardInterrupt as e:
+      print(e)
+   except Exception as e:
+      print(e)
+   finally:
+      exit
