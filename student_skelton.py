@@ -67,7 +67,7 @@ def psr():
     
 def gethelp():
     print("regact\tRegister account with given email and password\n")
-    print("edact\tEdit account details\n")
+    print("edact\tEdit account details (name, phone number)\n")
     print("vtut\tView list of tutors by given date and course number\n")
     print("aapt\tAdd appointment by a given date, tutor, and course number\n")
     print("edapt\tEdit current appointment with new date, tutor, or course number\n")
