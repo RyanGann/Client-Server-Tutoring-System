@@ -6,7 +6,7 @@ class Tutor(User):
         self.email = newEmail
         self.name = newName
         self.password = newPswrd
-        #self.aptSched =  
+        self.Appointments = []
 
     def papt():
         print("Get all current appointments from server")
