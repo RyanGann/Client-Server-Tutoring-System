@@ -1,4 +1,5 @@
 from user import User
+import Appointment
 
 class Tutor(User):
 
