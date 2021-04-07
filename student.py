@@ -31,9 +31,6 @@ def mkapt(date, subject, tutor):
         
     print("Appointment has been made and scheduled")
 
-def resetpswrd():
-    print("Password has been reset")
-
 def addAppointment ():
     print("")
 
