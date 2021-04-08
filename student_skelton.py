@@ -1,44 +1,62 @@
-#list of commands
-
 # this just has the function names which are yet to be filled in
 # note the name of this file is student_skeleton.py not student.py which means it wont work
 # with the current version1.py program cause that one imports student not student_skeleton
+# and so it needs to be renamed to student.py in order to be tested
 
 
-import os
+#import os
 #import version1
 
-def stuff():   #note change this name
+def studentloop():   #note change this name maybe
     cmd = ""
     while cmd != "exit":
-        #version1.clear_screen()
+    
+        #version1.clear_screen()     #do we want to use this?
+
         cmd = (input('> '))
-        if cmd == "regact":
-            regact()
-        elif cmd == "edact":   #this was not on overleaf doc
+        cmdlist = cmd.split()
+
+        if len(cmdlist) == 3 and cmdlist[0] == "regact":
+            regact(cmdlist[1], cmdlist[2])
+            
+        elif len(cmdlist) == 1 and cmdlist[0] == "edact":
             editacct()
-        elif cmd == "vtut":
+            
+        elif len(cmdlist) == 1 and cmdlist[0] == "vtut":
             vtut()
-        elif cmd == "aapt":
-            aapt()
-        elif cmd == "edapt":
+            
+        elif len(cmdlist) == 5 and cmdlist[0] == "aapt":
+            aapt(cmdlist[1], cmdlist[2], cmdlist[3], cmdlist[4])
+            
+        elif len(cmdlist) == 1 and cmdlist[0] == "edapt":
             edapt()
-        elif cmd == "dapt":
-            dapt()
-        elif cmd == "emcon":
+            
+        elif len(cmdlist) == 5 and cmdlist[0] == "dapt":
+            dapt(cmdlist[1], cmdlist[2], cmdlist[3], cmdlist[4])
+            
+        elif len(cmdlist) == 1 and cmdlist[0] == "emcon":
             emcon()
-        elif cmd == "emrem":
+            
+        elif len(cmdlist) == 1 and cmdlist[0] == "emrem":
             emrem()
-        elif cmd == "psr":
+            
+        elif len(cmdlist) == 1 and cmdlist[0] == "psr":   #note some of these might actually need more params
             psr()
-        elif cmd == "--help":
+            
+        elif len(cmdlist) == 4 and cmdlist[0] == "--help":  #do we want it to be --help or just help
             gethelp()
+            
         elif cmd != "exit":
             print("invalid command")
 
+     # should maybe make it specificy if the command is invalid because
+     # the number of params is incorrect or if its invalid because
+     # that command just doesnt exist
 
 
-def regact():
+#below are all the student function definitions:
+
+def regact(email, password):
     print("register account")
 
 def edact():
@@ -47,13 +65,13 @@ def edact():
 def vtut():
     print("view tutors")
 
-def aapt():
+def aapt(tutor, subj, date, time):
     print("Appointment has been added and scheduled")
 
 def edapt():
     print("edit appointment")
 
-def dapt():
+def dapt(tutor, subj, date, time):
     print("delete appointment")
 
 def emcon():
