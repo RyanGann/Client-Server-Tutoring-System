@@ -32,7 +32,7 @@ def mkapt(date, subject, tutor):
     print("Appointment has been made and scheduled")
 
 def addAppointment ():
-    print("")
+    print("     ")
 
 def emailConfirmation():
     print("")
