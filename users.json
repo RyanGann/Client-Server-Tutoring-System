@@ -1,0 +1,44 @@
+{"users":[
+    {"Admins":[
+        {
+            "email":"jjones48@una.edu",
+            "name":"Jalen Jones",
+            "password":"Password123"
+        }
+    ]},
+
+    {"Faculty":[
+    
+    ]},
+
+    {"Tutors":[
+        {
+            "email":"hbrown7@una.edu",
+            "name":"Houston Brown",
+            "password":"12Zebra_!"
+        },
+        {
+            "email":"dgarg@una.edu",
+            "name":"Divy Garg",
+            "password":"Panda9"
+        }        
+    ]},
+
+    {"Students":[
+        {
+            "email":"mnorwood@una.edu",
+            "name":"Mary Norwood",
+            "password":"#cs455"
+        },
+        {
+            "email":"rgann3@una.edu",
+            "name":"Ryan gann",
+            "password":"Password123"
+        },
+        {
+            "email":"paulbyars23@gmail.com",
+            "name":"Paul Byats",
+            "password":"wordPass"
+        }
+    ]}
+]}
