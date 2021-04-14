@@ -34,6 +34,7 @@ def login():
 
 if __name__ == "__main__":
    clear_screen()
+   
    print('********************************************************************************')
    print('*                        University of North Alabama                           *')
    print('*                    Tutor Appointment Management System                       *')
