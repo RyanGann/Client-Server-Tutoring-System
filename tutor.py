@@ -1,7 +1,11 @@
 from user import User
-import Appointment
+from appointment import Appointment
 
-class Tutor(User):
+class Tutor():
+
+
+    def tutorloop(self, user, password):
+        print("Tutor Loop")
 
     def __init__(self, newEmail, newName, newPswrd):
         self.email = newEmail
@@ -27,6 +31,3 @@ class Tutor(User):
     def dapt():
         print("Delete an appointment by given date, student, and course number")
 
-
-myTutor = Tutor("hbrown7@una.edu", "Houston Brown", "password")
-myTutor.pswrdReset()
