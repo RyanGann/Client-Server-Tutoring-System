@@ -23,7 +23,14 @@ class Tutor():
     Date/time key
     '''
     def aapt():
-        print("Create new appointment.  Need a date, student, and course number")
+        file1 = open("appointment.txt", "a")
+        date = input("Enter date: ")
+        student = input("Enter student: ")
+        course = input("Enter course: ")
+        L = [date, student, course]
+        file1.writelines(L)
+        file1.close()
+        #print("Create new appointment.  Need a date, student, and course number")
 
     def edapt():
         print("Edit appointment with new date, student, or course number")
