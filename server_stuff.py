@@ -23,3 +23,33 @@ print(posts.text)
 sys('curl -X GET "http://quanthu.life:8000/users" -H  "accept: application/json')
 sys('curl -X POST "http://quanthu.life:8000/users" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"_id\": \"12345\",\"username\":\"rgann\",\"email\":\"rgann2@una.edu\",\"password\":\"Ham1234!\",\"phone\":\"2054956944\",\"role\":\"admin\",\"lastActivityDateTime\":\"04/20/2021\",\"isActive\":true}"')
 sys('curl -X GET "http://quanthu.life:8000/users" -H  "accept: application/json')
+
+#More server stuff from Quan:
+'''
+import json
+import requests
+
+from requests.exceptions import HTTPError
+
+# try:
+    # response = requests.get('https://quanthu.life/tutorapp/users')
+    # response.raise_for_status()
+
+    # jsonResponse = response.json()
+    
+
+    # print(list(jsonResponse.items())[2][1])
+
+url = 'https://quanthu.life/tutorapp/users/login'
+data = {'username': 'jajerkins',
+    'password':'123abc'}
+
+x = requests.post(url, json = data)
+
+print(x.text)
+    
+# except HTTPError as http_err:
+#     print(f'HTTP error occurred: {http_err}')
+# except Exception as err:
+#     print(f'Other error occurred: {err}')
+'''
