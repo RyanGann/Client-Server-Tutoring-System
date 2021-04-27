@@ -125,8 +125,21 @@ def dapt(dateTime, tutor, course):
         f.writelines('\n'.join(json_lines))
 
 
-def emcon():
-    print("email confirmation")
+def emcon(email):
+    port = 465
+    smtp_server = "smtp.gmail.com"
+    sender_email = input("Type your gmail: ")
+    receiver_email = email
+    password = input("Type the password to your email address: ")
+    message = """\
+    Subject: Hi there
+
+    This is a test email confirmation."""
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message)
 
 def emrem():
     print("email reminder")
