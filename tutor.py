@@ -37,4 +37,12 @@ class Tutor():
 
     def dapt():
         print("Delete an appointment by given date, student, and course number")
+        
+    def gethelp():
+        print("papt\tView all current appointments\n")
+        print("capt\tComplete given appointment\n")
+        print("aapt\tAdd appointment by a given date, student, and course number\n")
+        print("edapt\tEdit current appointment with new date, student, or course number\n")
+        print("dapt\tDelete appointment by given date, student, and course number\n")
+        print("psr\tPassword reset that takes old and then new password\n")
 
