@@ -1,151 +1,194 @@
-#list of commands
+# this just has the function names which are yet to be filled in
+# note the name of this file is student_skeleton.py not student.py which means it wont work
+# with the current version1.py program cause that one imports student not student_skeleton
+# and so it needs to be renamed to student.py in order to be tested
 
+import getpass
+import requests
+from requests.exceptions import HTTPError
 import json
-import sys
-import os
-import smtplib, ssl
+from utilities import clear_screen
 
-from appointment import Appointment
-
-
-def studentloop(user, password):   #note change this name maybe
+def studentloop(usr):   #note change this name maybe
+    name = usr.split("@")[0]
     cmd = ""
-    while cmd != "exit":
     
-        #version1.clear_screen()     #do we want to use this?
+    while cmd != "logout":
+    
+        try:
+            cmd = (input(f'{name}> '))
+            cmdlist = cmd.split()
+                
+            if len(cmdlist) == 1 and cmdlist[0] == "edact":
+                edact()
+                
+            elif len(cmdlist) == 1 and cmdlist[0] == "vtut":
+                print()
+                vtut()
+                
+            elif cmdlist[0] == "aapt":
+                aapt(cmdlist)
+                
+            elif cmdlist[0] == "edapt":   
+                edapt(cmdlist)
+                
+            elif cmdlist[0] == "dapt":
+                dapt(cmdlist)
+                
+            elif len(cmdlist) == 1 and cmdlist[0] == "emcon":
+                emcon()
+                
+            elif len(cmdlist) == 1 and cmdlist[0] == "emrem":
+                emrem()
+                
+            elif len(cmdlist) == 1 and cmdlist[0] == "psr":   #note some of these might actually need more params
+                curStudent.pswrdReset()
+                
+            elif len(cmdlist) == 1 and cmdlist[0] == "--help":  #do we want it to be --help or just help
+                gethelp()
 
-        cmd = (input('> '))
-        cmdlist = cmd.split()
+            elif len(cmdlist) == 1 and cmdlist[0] == "clear":
+                clear_screen()
+                
+            elif cmd != "logout":
+                print("Error: Invalid command")
 
-        if len(cmdlist) == 3 and cmdlist[0] == "regact":
-            regact(cmdlist[1], cmdlist[2])
-            
-        elif len(cmdlist) == 1 and cmdlist[0] == "edact":
-            edact()
-            
-        elif len(cmdlist) == 1 and cmdlist[0] == "vtut":
-            vtut()
-            
-        elif len(cmdlist) == 5 and cmdlist[0] == "aapt":
-            aapt(cmdlist[1], cmdlist[2], cmdlist[3], cmdlist[4])
-            
-        elif len(cmdlist) == 4 and cmdlist[0] == "edapt":
-            edapt(cmdlist[1], cmdlist[2], cmdlist[3])
-            
-        elif len(cmdlist) == 4 and cmdlist[0] == "dapt":
-            dapt(cmdlist[1], cmdlist[2], cmdlist[3])
-            
-        elif len(cmdlist) == 1 and cmdlist[0] == "emcon":
-            emcon()
-            
-        elif len(cmdlist) == 1 and cmdlist[0] == "emrem":
-            emrem()
-            
-        elif len(cmdlist) == 1 and cmdlist[0] == "psr":   #note some of these might actually need more params
-            psr()
-            
-        elif len(cmdlist) == 1 and cmdlist[0] == "help":  #do we want it to be --help or just help
-            gethelp()
-            
-        elif cmd != "exit":
-            print("invalid command")
-
-     # should maybe make it specificy if the command is invalid because
-     # the number of params is incorrect or if its invalid because
-     # that command just doesnt exist
+        except IndexError as ind:
+            print("Error: Wrong number of arguements")
+            continue
+        except HTTPError as http_err:
+            print(f'HTTP Error occured: {http_err}')
+            continue
+        except KeyboardInterrupt as kybrd:
+            cmd = "logout"
+            continue
+        except Exception as err:
+            print(f'Error: {err}')
+            continue
 
 
 #below are all the student function definitions:
 
 def regact(email, password):
-    acct = {}
-    acct['user'] = []
-    acct['user'].append({
-        'email': email,
-        'password': password
-    })
+    infile = open("accounts.txt", "a")
+    infile.write(email + " " + password + "\n")
+    infile.close()
+    print("Registered Account")
+    
 
-    with open('accounts.json', 'w') as accounts:
-        json.dump(acct, accounts)
-
-    print("-- account registered --")
-
-def edact():
+def edact(cmdlist):
     print("edit account")
+    
 
 def vtut():
-    print("view tutors")
+    try:
+        url = 'https://quanthu.life/tutorapp/schedule'
 
-def aapt(dateTime, tutor, course, compl):
-    newApt = Appointment(dateTime, tutor, course, compl)
-    newApt.addAppointment()
+        x = requests.get(url)
+        resp = json.loads(x.text)
+        
+        col_width = 0
+        for users in resp['data']:
+            if col_width < len(users['tutor_id']):
+                col_width = len(users['tutor_id'])
+                
+        print('Tutor ID', '%13s'%'Date', '%17s'%'Start Time', '%15s'%'End Time')
+        print('=========================================================')
+
+        for users in resp['data']:
+            print(users['tutor_id'].center(col_width),
+                  '%15s'% users['date'].ljust(col_width),
+                  '%15s'% users['from_time'].center(col_width),
+                  '%15s' %users['end_time'].center(col_width))
+            
+    except HTTPError as http_err:
+        print(f'HTTP error occured: {http_err}')
+    except Exception as err:
+        print(f'Error: {err}')    
+
+
+
+
+'''
+-t Tutor
+-c Course
+-d Date
+-s Time
+'''
+# aapt -t Jalen Jones -c CS355 -d 4/16/2021 -t 1200
+def aapt(cmdlist):
+    infile = open("appointments.txt", "a")
+
+    if len(cmdlist) < 10:
+        print("Error: wrong number of arguements")
+        
+    elif cmdlist[4] == '-c':
+        tutor = cmdlist[2] + " " + cmdlist[3]
+        subj = cmdlist[5]
+        date = cmdlist[7]
+        time = cmdlist[9]
+        infile.write(tutor + " " + subj + " "  + date + " " + time + "\n")
+        
+    else:
+        print("Error: invalid arguement placement")
+    
+    infile.close()
     print("Appointment has been added and scheduled")
 
-def edapt(dateTime, tutor, course):
-    with open('appointments.json') as f:
-        data = json.load(f)
 
-    edit = " "
-    for item in data['appointment']:
-        if (dateTime == item['dateTime'] and
-            tutor == item['tutor'] and
-            course == item['course']):
-            while(edit != "nevermind"):
-                edit = input("What would you like to edit?(dateTime, tutor, course, completed, or nevermind)")
-                if edit == "dateTime":
-                    newDate = input("New dateTime: ")
-                    item['dateTime'] = item['dateTime'].replace(item['dateTime'], newDate)
-                    with open('appointments.json', 'w') as f:
-                        json.dump(data, f)
-                elif edit == "tutor":
-                    newTutor = input("New tutor: ")
-                    item['tutor'] = item['tutor'].replace(item['tutor'], newTutor)
-                    with open('appointments.json', 'w') as f:
-                        json.dump(data, f)
-                elif edit == "course":
-                    newCourse = input("New course: ")
-                    item['course'] = item['course'].replace(item['course'], newCourse)
-                    with open('appointments.json', 'w') as f:
-                        json.dump(data, f)
+def edapt(cmdlist):
+    infile = open("appointments.txt", "a")
 
-            print("Appointment eddited successfully!")
+    if len(cmdlist) < 10:
+        print("Error: wrong number of arguements")
+    elif cmdlist[4] == '-c':
+        name = cmdlist[2] + " " + cmdlist[3]
+        course = cmdlist[5]
+        day = cmdlist[7]
+        time = cmdlist[9]
+        infile.write(name + " " + course + " "  + day + " " + time + "\n")
+    else:
+        print("Error: invalid arguement placement")
+    
+    infile.close()    
+    print("Appointment has been edited")
+
+# dapt -t Jalen Jones -c CS355 -d 4/16/2021 -t 1200
+def dapt(cmdlist):
+    ctr = 0
+    infile = open("appointments.txt", "r")
+    
+    if len(cmdlist) < 10:
+        print("Error: wrong number of arguements")
+    elif cmdlist[4] == '-c':
+        lines = infile.readlines()
+        infile.close()
+
+        command = cmdlist[2] + " " + cmdlist[3] + " " + cmdlist[5] + " " +\
+                  cmdlist[7] + " " + cmdlist[9]
+
+        for line in lines:
+            if line[ctr] == command[ctr]:
+                print()
+                #Deletion command goes here
+            ctr = ctr + 1
+
+        infile = open("appointments.txt", "w+")
+
+        for line in lines:
+            infile.write(line)
+    else:
+        print("Error: invalid arguement placement")
+            
+    infile.close()
+    print("Appointment has been deleted")
 
 
-def dapt(dateTime, tutor, course):
-    json_lines = []
-    with open("appointments.json", 'r') as f:
-        for line in f.readlines():
-            j = json.loads(line)
-            if (dateTime != j['dateTime'] and
-            tutor != j['tutor'] and
-            course != j['course']):
-                json_lines.append(line)
-
-    with open("appointments.json", 'w') as f:
-        f.writelines('\n'.join(json_lines))
-
-
-def emcon(email):
-    port = 465
-    smtp_server = "smtp.gmail.com"
-    sender_email = input("Type your gmail: ")
-    receiver_email = email
-    password = input("Type the password to your email address: ")
-    message = """\
-    Subject: Hi there
-
-    This is a test email confirmation."""
-
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(sender_email, receiver_email, message)
-
+def emcon():
+    print("emial conrimation")
+    
 def emrem():
     print("email reminder")
-
-def psr():
-    print("Password has been reset")
     
 def gethelp():
     print("regact\tRegister account with given email and password\n")
@@ -158,11 +201,6 @@ def gethelp():
     print("emrem\tSend an email reminder of appointmentto student email provided a given date\n")
     print("psr\tPassword reset that takes old and then new password\n")
 
+if __name__ == '__main__':
+    vtut()
 
-
-              
-if __name__ == "__main__":
-    email = input("Enter an email: ")
-    password = input("Create a password: ")
-
-    registerAcct(email, password)

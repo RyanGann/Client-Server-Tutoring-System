@@ -2,7 +2,7 @@ from user import User
 
 class Admin(User):
 
-    def adad():
+    def addad():
         print("Add a new admin account")
 
     def edad():
@@ -49,7 +49,7 @@ class Admin(User):
 
     def srpt():
         print("Schedule a report to be emailed periodically")
-        
+
     def gethelp():
         print("adad\tAdd a new admin with an email, name, and password\n")
         print("edad\tEdit an admin's email, name, or password\n")
@@ -68,4 +68,3 @@ class Admin(User):
         print("rnrpt\tRun given report\n")
         print("srpt\tSchedule a report to be emailed periodically\n")
         print("psr\tPassword reset that takes old and then new password\n")
-

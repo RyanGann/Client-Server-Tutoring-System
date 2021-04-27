@@ -7,7 +7,7 @@ class Faculty(User):
 
     def srpt():
         print("Schedule a report to be emailed periodically")
-        
+
     def gethelp():
         print("rnrpt\tRun given report\n")
         print("srpt\tSchedule a report to be emailed periodically\n")
