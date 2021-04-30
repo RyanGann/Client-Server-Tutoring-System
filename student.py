@@ -185,7 +185,9 @@ def gethelp():
 	lines = infile.readlines()
 
 	for line in lines:
-	    print(line, end = "")
+		print(line, end = "")
+
+	print()
 	    
 	infile.close()
 
