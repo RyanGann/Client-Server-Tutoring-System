@@ -9,7 +9,7 @@ class Faculty(User):
         print("Schedule a report to be emailed periodically")
 
     def gethelp():
-        infile = open("help_student.txt", "r")
+        infile = open("help_faculty.txt", "r")
 
         lines = infile.readlines()
 
