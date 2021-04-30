@@ -1,8 +1,3 @@
-# this just has the function names which are yet to be filled in
-# note the name of this file is student_skeleton.py not student.py which means it wont work
-# with the current version1.py program cause that one imports student not student_skeleton
-# and so it needs to be renamed to student.py in order to be tested
-
 import getpass
 import requests
 from requests.exceptions import HTTPError
@@ -68,12 +63,6 @@ def studentloop(usr):   #note change this name maybe
 
 
 #below are all the student function definitions:
-
-def regact(email, password):
-    infile = open("accounts.txt", "a")
-    infile.write(email + " " + password + "\n")
-    infile.close()
-    print("Registered Account")
     
 
 def edact(cmdlist):
@@ -191,15 +180,14 @@ def emrem():
     print("email reminder")
     
 def gethelp():
-    print("regact\tRegister account with given email and password\n")
-    print("edact\tEdit account details (name, phone number)\n")
-    print("vtut\tView list of tutors by given date and course number\n")
-    print("aapt\tAdd appointment by a given date, tutor, and course number\n")
-    print("edapt\tEdit current appointment with new date, tutor, or course number\n")
-    print("dapt\tDelete appointment by a given date, tutor, and course number\n")
-    print("emcon\tSend an email confirmation of appointment to student email provided a given date\n")
-    print("emrem\tSend an email reminder of appointmentto student email provided a given date\n")
-    print("psr\tPassword reset that takes old and then new password\n")
+	infile = open("help_student.txt", "r")
+
+	lines = infile.readlines()
+
+	for line in lines:
+	    print(line, end = "")
+	    
+	infile.close()
 
 if __name__ == '__main__':
     vtut()
