@@ -9,6 +9,13 @@ class Faculty(User):
         print("Schedule a report to be emailed periodically")
 
     def gethelp():
-        print("rnrpt\tRun given report\n")
-        print("srpt\tSchedule a report to be emailed periodically\n")
-        print("psr\tPassword reset that takes old and then new password\n")
+        infile = open("help_student.txt", "r")
+
+        lines = infile.readlines()
+
+        for line in lines:
+        print(line, end = "")
+
+        print()
+	    
+        infile.close()
