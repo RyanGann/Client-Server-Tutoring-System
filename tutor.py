@@ -90,10 +90,13 @@ def dapt():
     print("Delete an appointment by given date, student, and course number")
 
 def getHelp():
-    print("papt\tPrint all appointments\n")
-    print("capt\tComplete and appointment by using the key to lookup\n")
-    print("aapt\tCreate a new appointment\n")
-    print("edapt\tEdit specific appointment date, student, and course number\n")
-    print("dapt\tEdit current appointment with new date, tutor, or course number\n")
-    print("dapt\tDelete appointment by a given date, tutor, and course number\n")
-    print("psr\tPassword reset that takes old and then new password\n")
+	infile = open("help_tutor.txt", "r")
+
+	lines = infile.readlines()
+
+	for line in lines:
+		print(line, end = "")
+
+	print()
+	    
+	infile.close()
