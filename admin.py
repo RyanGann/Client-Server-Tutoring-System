@@ -87,7 +87,25 @@ def admin_loop(usr):
 
 
 def adad():
-    print("Add a new admin account")
+    url = 'http://quanthu.life:8000/users'
+
+    usrnme = input("Create a username: ")
+    email = input("Enter an email address: ")
+    psswrd = input("Create a password: ")
+    phone = input("Enter your phone number: ")
+    
+    data = {
+        "_id": "",
+        "username": usrnme,
+        "email": email,
+        "password": psswrd,
+        "phone": phone,
+        "role": "admin",
+        "lastActivityDateTime": "",
+        "isActive": "true"
+    }
+
+    resp = requests.post(url, json = data)
 
 def edad():
     print("Edit an admin's email, name, or password")
