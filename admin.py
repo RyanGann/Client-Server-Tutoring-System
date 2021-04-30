@@ -135,23 +135,16 @@ def srpt():
     print("Schedule a report to be emailed periodically")
 
 def gethelp():
-    print("adad\tAdd a new admin with an email, name, and password\n")
-    print("edad\tEdit an admin's email, name, or password\n")
-    print("delad\tDelete an admin's account\n")
-    print("adfac\tAdd a new faculty with an email, name, and password\n")
-    print("edfac\tEdit a faculty's email, name, or password\n")
-    print("delfac\tDelete a faculty's account\n")
-    print("adtut\tAdd a new tutor with an email, name, and password\n")
-    print("edtut\tEdit a tutor's email, name, or password\n")
-    print("deltut\tDelete a tutor's accountd\n")
-    print("adts\tAdd a new availability schedule for a given tutor\n")
-    print("edts\tEdit a given tutor's availability schedule\n")
-    print("delts\tDelete a given tutor's availability schedule\n")
-    print("psa\tPurge a given student's account\n")
-    print("papt\tPurge appointment data by given date\n")
-    print("rnrpt\tRun given report\n")
-    print("srpt\tSchedule a report to be emailed periodically\n")
-    print("psr\tPassword reset that takes old and then new password\n")
+    infile = open("help_admin.txt", "r")
+
+    lines = infile.readlines()
+
+    for line in lines:
+        print(line, end = "")
+
+    print()
+	    
+    infile.close()
 
 if __name__ == '__main__':
     admin_loop('hbrown7@una.edu')
