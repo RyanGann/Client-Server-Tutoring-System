@@ -1,0 +1,3 @@
+rnrpt	Run given report
+srpt	Schedule a report to be emailed periodically
+psr	Password reset that takes old and then new password
