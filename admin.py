@@ -87,7 +87,11 @@ def admin_loop(usr):
 
 
 def adad():
-    url = 'http://quanthu.life:8000/users'
+    response = requests.get('http://quanthu.life:8000/users')
+    if response.status_code == 200:
+        print("Successfully retrieved information")
+    elif response.status_code == 404:
+        print("Failed to retrieve information")
 
     usrnme = input("Create a username: ")
     email = input("Enter an email address: ")
@@ -95,23 +99,43 @@ def adad():
     phone = input("Enter your phone number: ")
     
     data = {
-        "_id": "",
         "username": usrnme,
         "email": email,
         "password": psswrd,
         "phone": phone,
         "role": "admin",
-        "lastActivityDateTime": "",
-        "isActive": "true"
+        "isActive": True
     }
 
-    resp = requests.post(url, json = data)
+    posts = requests.post('http://quanthu.life:8000/users', json = data)
 
 def edad():
-    print("Edit an admin's email, name, or password")
+    id = input("Enter the id of the admin you would like to edit: ")
+
+    usrnme = input("Create a username: ")
+    email = input("Enter an email address: ")
+    psswrd = input("Create a password: ")
+    phone = input("Enter your phone number: ")
+    
+    data = {
+        "username": usrnme,
+        "email": email,
+        "password": psswrd,
+        "phone": phone,
+        "role": "admin",
+        "isActive": True
+    }
+
+    url = 'http://quanthu.life:8000/users/' + id
+
+    posts = requests.put(url, json = data)
 
 def delad():
-    print("Delete an admin's account by email")
+    id = input("Enter the id of the admin you would like to delete: ")
+
+    url = 'http://quanthu.life:8000/users/' + id
+
+    posts = requests.delete(url, data = "deleting admin")
 
 def adfac():
     print("Add a new faculty account")
