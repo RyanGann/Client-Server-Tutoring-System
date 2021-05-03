@@ -87,27 +87,32 @@ def admin_loop(usr):
 
 
 def adad():
-    response = requests.get('http://quanthu.life:8000/users')
-    if response.status_code == 200:
-        print("Successfully retrieved information")
-    elif response.status_code == 404:
-        print("Failed to retrieve information")
-
     usrnme = input("Create a username: ")
     email = input("Enter an email address: ")
     psswrd = input("Create a password: ")
     phone = input("Enter your phone number: ")
+    activeStat = input("Are you active?(Y/N): ")
+
+    if activeStat == 'Y':
+        status = True
+    else:
+        status = False
+
     
     data = {
         "username": usrnme,
         "email": email,
         "password": psswrd,
         "phone": phone,
-        "role": "admin",
-        "isActive": True
+        "role": "ADMIN",
+        "isActive": status
     }
 
-    posts = requests.post('http://quanthu.life:8000/users', json = data)
+    response = requests.post('http://quanthu.life:8000/users', json = data)
+    if response.status_code == 200:
+        print("Successfully added admin")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def edad():
     id = input("Enter the id of the admin you would like to edit: ")
@@ -116,44 +121,183 @@ def edad():
     email = input("Enter an email address: ")
     psswrd = input("Create a password: ")
     phone = input("Enter your phone number: ")
+    activeStat = input("Are you active?(Y/N): ")
+
+    if activeStat == 'Y':
+        status = True
+    else:
+        status = False
+
     
     data = {
         "username": usrnme,
         "email": email,
         "password": psswrd,
         "phone": phone,
-        "role": "admin",
-        "isActive": True
+        "role": "ADMIN",
+        "isActive": status
     }
 
     url = 'http://quanthu.life:8000/users/' + id
 
-    posts = requests.put(url, json = data)
+    response = requests.put(url, json = data)
+    if response.status_code == 200:
+        print("Successfully edited selected admin")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def delad():
     id = input("Enter the id of the admin you would like to delete: ")
 
     url = 'http://quanthu.life:8000/users/' + id
 
-    posts = requests.delete(url, data = "deleting admin")
+    response = requests.delete(url, data = "deleting admin")
+    if response.status_code == 200:
+        print("Successfully deleted selected admin")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def adfac():
-    print("Add a new faculty account")
+    usrnme = input("Create a username: ")
+    email = input("Enter an email address: ")
+    psswrd = input("Create a password: ")
+    phone = input("Enter your phone number: ")
+    activeStat = input("Are you active?(Y/N): ")
+
+    if activeStat == 'Y':
+        status = True
+    else:
+        status = False
+
+    
+    data = {
+        "username": usrnme,
+        "email": email,
+        "password": psswrd,
+        "phone": phone,
+        "role": "FACULTY",
+        "isActive": status
+    }
+
+    response = requests.post('http://quanthu.life:8000/users', json = data)
+    if response.status_code == 200:
+        print("Successfully added faculty member")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def edfac():
-    print("Edit a faculty's email, name, or password")
+    id = input("Enter the id of the faculty member you would like to edit: ")
+
+    usrnme = input("Create a username: ")
+    email = input("Enter an email address: ")
+    psswrd = input("Create a password: ")
+    phone = input("Enter your phone number: ")
+    activeStat = input("Are you active?(Y/N): ")
+
+    if activeStat == 'Y':
+        status = True
+    else:
+        status = False
+
+    
+    data = {
+        "username": usrnme,
+        "email": email,
+        "password": psswrd,
+        "phone": phone,
+        "role": "FACULTY",
+        "isActive": status
+    }
+
+    url = 'http://quanthu.life:8000/users/' + id
+
+    response = requests.put(url, json = data)
+    if response.status_code == 200:
+        print("Successfully edited selected faculty member")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def delfac():
-    print("Delete a faculty's account by email")
+    id = input("Enter the id of the faculty member you would like to delete: ")
+
+    url = 'http://quanthu.life:8000/users/' + id
+
+    response = requests.delete(url, data = "deleting faculty member")
+    if response.status_code == 200:
+        print("Successfully deleted selected faculty member")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def adtut():
-    print("Add a new Tutor account")
+    usrnme = input("Create a username: ")
+    email = input("Enter an email address: ")
+    psswrd = input("Create a password: ")
+    phone = input("Enter your phone number: ")
+    activeStat = input("Are you active?(Y/N): ")
+
+    if activeStat == 'Y':
+        status = True
+    else:
+        status = False
+
+    
+    data = {
+        "username": usrnme,
+        "email": email,
+        "password": psswrd,
+        "phone": phone,
+        "role": "TUTOR",
+        "isActive": status
+    }
+
+    response = requests.post('http://quanthu.life:8000/users', json = data)
+    if response.status_code == 200:
+        print("Successfully added tutor")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def edtut():
-    print("Edit a tutor's email, name, or password")
+    id = input("Enter the id of the tutor you would like to edit: ")
+
+    usrnme = input("Create a username: ")
+    email = input("Enter an email address: ")
+    psswrd = input("Create a password: ")
+    phone = input("Enter your phone number: ")
+    activeStat = input("Are you active?(Y/N): ")
+
+    if activeStat == 'Y':
+        status = True
+    else:
+        status = False
+
+    
+    data = {
+        "username": usrnme,
+        "email": email,
+        "password": psswrd,
+        "phone": phone,
+        "role": "TUTOR",
+        "isActive": status
+    }
+
+    url = 'http://quanthu.life:8000/users/' + id
+
+    response = requests.put(url, json = data)
+    if response.status_code == 200:
+        print("Successfully edited selected tutor")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def deltut():
-    print("Delete a tutor's account by email")
+    id = input("Enter the id of the tutor you would like to delete: ")
+
+    url = 'http://quanthu.life:8000/users/' + id
+
+    response = requests.delete(url, data = "deleting tutor")
+    if response.status_code == 200:
+        print("Successfully deleted selected tutor")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def adts():
     print("Add a new schedule object to a given tutor")
