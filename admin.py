@@ -1,49 +1,47 @@
 import requests
 from requests.exceptions import HTTPError
 import json
-#from utilities import clear_screen
+from utilities import clear_screen
+from utilities import psr
 
 
 def admin_loop(usr):
-    name = usr.split('@')[0]
     cmd = ''
 
     while cmd != 'logout':
         try:
-            cmd = (input(f'{name}> '))
+            cmd = (input(f'{usr}> '))
             cmd_list = cmd.split()
 
-            if cmd_list[0] == 'adad':
-                adad()
-
+            if len(cmd_list) == 3 and cmd_list[0] == 'adad':
+                add_account(cmd_list, 'ADMIN')
+            
             elif cmd_list[0] == 'edad':
                 edad()
 
-            elif cmd_list[0] == 'delad':
-                delad()
+            elif len(cmd_list) == 3 and cmd_list[0] == 'delad':
+                del_account(cmd_list)
 
             elif cmd_list[0] == 'adfac':
-                adfac()
+                add_account(cmd_list, 'FACULTY')
 
             elif cmd_list[0] == 'edfac':
                 edfac()
 
-
             elif cmd_list[0] == 'delfac':
-                delfac()
-
+                del_account(cmd_list)
 
             elif cmd_list[0] == 'adtut':
-                adtut()
+                add_account(cmd_list, 'TUTOR')
 
             elif cmd_list[0] == 'edtut':
                 edtut()
 
             elif cmd_list[0] == 'deltut':
-                deltut()
+                del_account(cmd_list)
 
-            elif cmd_list[0] == 'adts':
-                adts()
+            elif len(cmd_list) == 9 and cmd_list[0] == 'adts':
+                adts(cmd_list)
 
             elif cmd_list[0] == 'edts':
                 edts()
@@ -52,10 +50,13 @@ def admin_loop(usr):
                 delts()
 
             elif cmd_list[0] == 'psa':
-                psa()
+                psa(cmd_list)
 
             elif cmd_list[0] == 'papt':
                 papt()
+
+            elif cmd_list[0] == 'psr':
+                psr(usr)
 
             elif cmd_list[0] == 'rnrpt':
                 rnrpt()
@@ -63,7 +64,7 @@ def admin_loop(usr):
             elif cmd_list[0] == 'srpt':
                 srpt()
 
-            elif len(cmd_list) == 1 and cmd_list[0] == '--help':  #do we want it to be --help or just help
+            elif len(cmd_list) == 1 and cmd_list[0] == '--help':
                 gethelp()
 
             elif len(cmd_list) == 1 and cmd_list[0] == 'clear':
@@ -71,266 +72,241 @@ def admin_loop(usr):
                 
             elif cmd != 'logout':
                 print('Error: Invalid command')
-
+            
         except IndexError as ind:
-            print('Error: Wrong number of arguements')
-            continue
+            if cmd == '\r' or '\n': continue
+            else:
+                print('Error: Wrong number of arguments')
+                continue
         except HTTPError as http_err:
-            print(f'HTTP Error occured: {http_err}')
+            print(f'HTTP Error: {http_err}')
             continue
         except KeyboardInterrupt as kybrd:
             cmd = 'logout'
-            continue
+            print()
         except Exception as err:
             print(f'Error: {err}')
             continue
+            
 
 
-def adad():
-    usrnme = input("Create a username: ")
-    email = input("Enter an email address: ")
-    psswrd = input("Create a password: ")
-    phone = input("Enter your phone number: ")
-    activeStat = input("Are you active?(Y/N): ")
+def add_account(cmd_list, new_role):
+    if cmd_list[1] == '-u':
+        usr_name = str(cmd_list[2])
+        pswrd = 'Leo'
+        pswrd = pswrd + usr_name + '!'
+        email = usr_name + '@una.edu'
 
-    if activeStat == 'Y':
-        status = True
+        url = 'https://quanthu.life/tutorapp/users'
+        data = {'username': usr_name,
+                'email': email,
+                'password': pswrd,
+                'phone': "",
+                'role': new_role
+                }
+        req = requests.post(url, json = data)
+        resp = json.loads(req.text)
+
+        if resp['errorCode'] == 200:
+            print('New user has been successfully created')
+        elif resp['errorCode'] == 404:
+            print(resp['message'])
+                
     else:
-        status = False
+        print('Error: invalid arguement(s)')
 
-    
-    data = {
-        "username": usrnme,
-        "email": email,
-        "password": psswrd,
-        "phone": phone,
-        "role": "ADMIN",
-        "isActive": status
-    }
 
-    response = requests.post('http://quanthu.life:8000/users', json = data)
-    if response.status_code == 200:
-        print("Successfully added admin")
-    elif response.status_code == 404:
-        print("Unsuccessful request")
+
+def del_account(cmd_list):
+    if cmd_list[1] == '-u':
+        is_found = True
+        users_url = 'https://quanthu.life/tutorapp/users/'
+        
+        req = requests.get(users_url)
+        users = json.loads(req.text)
+        
+        if users['errorCode'] == 200:
+            for item in users['data']:
+                if cmd_list[2] == item['username']:
+                    is_found = True
+                    _id = item['_id']
+                    del_url = users_url + _id
+                    del_usr = requests.delete(del_url)
+                    del_resp = json.loads(del_usr.text)
+                    
+                    if del_resp['errorCode'] == 200:
+                        print('User has been successfully deleted')
+                    else:
+                        print(del_resp['message'])
+                else: is_found = False
+
+            if is_found == False:
+                print('Invalid username')
+                        
+        elif users['errorCode'] == 404:
+          print(users['message'])
+    else:
+       print('Error: invalid arguement(s)')
+        
+
 
 def edad():
-    id = input("Enter the id of the admin you would like to edit: ")
+    print("Edit an admin's email, name, or password\n")
 
-    usrnme = input("Create a username: ")
-    email = input("Enter an email address: ")
-    psswrd = input("Create a password: ")
-    phone = input("Enter your phone number: ")
-    activeStat = input("Are you active?(Y/N): ")
 
-    if activeStat == 'Y':
-        status = True
-    else:
-        status = False
-
-    
-    data = {
-        "username": usrnme,
-        "email": email,
-        "password": psswrd,
-        "phone": phone,
-        "role": "ADMIN",
-        "isActive": status
-    }
-
-    url = 'http://quanthu.life:8000/users/' + id
-
-    response = requests.put(url, json = data)
-    if response.status_code == 200:
-        print("Successfully edited selected admin")
-    elif response.status_code == 404:
-        print("Unsuccessful request")
-
-def delad():
-    id = input("Enter the id of the admin you would like to delete: ")
-
-    url = 'http://quanthu.life:8000/users/' + id
-
-    response = requests.delete(url, data = "deleting admin")
-    if response.status_code == 200:
-        print("Successfully deleted selected admin")
-    elif response.status_code == 404:
-        print("Unsuccessful request")
-
-def adfac():
-    usrnme = input("Create a username: ")
-    email = input("Enter an email address: ")
-    psswrd = input("Create a password: ")
-    phone = input("Enter your phone number: ")
-    activeStat = input("Are you active?(Y/N): ")
-
-    if activeStat == 'Y':
-        status = True
-    else:
-        status = False
-
-    
-    data = {
-        "username": usrnme,
-        "email": email,
-        "password": psswrd,
-        "phone": phone,
-        "role": "FACULTY",
-        "isActive": status
-    }
-
-    response = requests.post('http://quanthu.life:8000/users', json = data)
-    if response.status_code == 200:
-        print("Successfully added faculty member")
-    elif response.status_code == 404:
-        print("Unsuccessful request")
 
 def edfac():
-    id = input("Enter the id of the faculty member you would like to edit: ")
+    print("Edit a faculty's email, name, or password]n")
 
-    usrnme = input("Create a username: ")
-    email = input("Enter an email address: ")
-    psswrd = input("Create a password: ")
-    phone = input("Enter your phone number: ")
-    activeStat = input("Are you active?(Y/N): ")
 
-    if activeStat == 'Y':
-        status = True
-    else:
-        status = False
-
-    
-    data = {
-        "username": usrnme,
-        "email": email,
-        "password": psswrd,
-        "phone": phone,
-        "role": "FACULTY",
-        "isActive": status
-    }
-
-    url = 'http://quanthu.life:8000/users/' + id
-
-    response = requests.put(url, json = data)
-    if response.status_code == 200:
-        print("Successfully edited selected faculty member")
-    elif response.status_code == 404:
-        print("Unsuccessful request")
-
-def delfac():
-    id = input("Enter the id of the faculty member you would like to delete: ")
-
-    url = 'http://quanthu.life:8000/users/' + id
-
-    response = requests.delete(url, data = "deleting faculty member")
-    if response.status_code == 200:
-        print("Successfully deleted selected faculty member")
-    elif response.status_code == 404:
-        print("Unsuccessful request")
-
-def adtut():
-    usrnme = input("Create a username: ")
-    email = input("Enter an email address: ")
-    psswrd = input("Create a password: ")
-    phone = input("Enter your phone number: ")
-    activeStat = input("Are you active?(Y/N): ")
-
-    if activeStat == 'Y':
-        status = True
-    else:
-        status = False
-
-    
-    data = {
-        "username": usrnme,
-        "email": email,
-        "password": psswrd,
-        "phone": phone,
-        "role": "TUTOR",
-        "isActive": status
-    }
-
-    response = requests.post('http://quanthu.life:8000/users', json = data)
-    if response.status_code == 200:
-        print("Successfully added tutor")
-    elif response.status_code == 404:
-        print("Unsuccessful request")
 
 def edtut():
-    id = input("Enter the id of the tutor you would like to edit: ")
+    print("Edit a tutor's email, name, or password\n")
 
-    usrnme = input("Create a username: ")
-    email = input("Enter an email address: ")
-    psswrd = input("Create a password: ")
-    phone = input("Enter your phone number: ")
-    activeStat = input("Are you active?(Y/N): ")
 
-    if activeStat == 'Y':
-        status = True
+
+#adts -u hbrown5 -d <dateTime> -f <fromTime> -e <endTime>
+def adts(cmd_list):
+    if cmd_list[1] == '-u' and cmd_list[3] == '-d' and cmd_list[5] == '-f'\
+               and cmd_list[7] == '-e':
+        is_found  = True
+        users_url = 'https://quanthu.life/tutorapp/users'
+        sched_url = 'https://quanthu.life/tutorapp/schedule'
+        
+        req = requests.get(users_url)
+        users = json.loads(req.text)
+
+        if users['errorCode'] == 200:
+            for item in users['data']:
+                if str(cmd_list[2]) == item['username']:
+                    is_found = True
+                    tutor_id = item['username']
+                    data = {'_id': item['_id'],
+                            'tutor_id': tutor_id,
+                            'weekday': str(cmd_list[4]),
+                            'from_time': str(cmd_list[6]),
+                            'end_time': str(cmd_list[8]),
+                            'isActive': True}
+                    
+                    sched_req = requests.post(sched_url, json = data)
+                    sched_resp = json.loads(sched_req.text)
+                    
+                    if sched_resp['errorCode'] == 200:
+                        print('New schedule has been created')
+                    else:
+                        print(sched_resp['message'])
+                    break
+                        
+                else: is_found = False
+                
+            if is_found == False:
+                print('Invalid username')
+        
+        elif users['errorCode'] == 404:
+          print(users['message'])
     else:
-        status = False
+        print('Error: invalid arguement(s)')
 
-    
-    data = {
-        "username": usrnme,
-        "email": email,
-        "password": psswrd,
-        "phone": phone,
-        "role": "TUTOR",
-        "isActive": status
-    }
-
-    url = 'http://quanthu.life:8000/users/' + id
-
-    response = requests.put(url, json = data)
-    if response.status_code == 200:
-        print("Successfully edited selected tutor")
-    elif response.status_code == 404:
-        print("Unsuccessful request")
-
-def deltut():
-    id = input("Enter the id of the tutor you would like to delete: ")
-
-    url = 'http://quanthu.life:8000/users/' + id
-
-    response = requests.delete(url, data = "deleting tutor")
-    if response.status_code == 200:
-        print("Successfully deleted selected tutor")
-    elif response.status_code == 404:
-        print("Unsuccessful request")
-
-def adts():
-    print("Add a new schedule object to a given tutor")
+        
 
 def edts():
-    print("Change a given tutor's availability schedule")
+    print("Change a given tutor's availability schedule\n")
 
-def delts():
-    print("Delete a given tutor's availability schedule")
 
-def psa():
-    print("Purge a student account by email")
+
+#delts -u hbrown5
+#The Deletion server command is not working properly
+def delts(cmd_list):
+    print("Deleting tutor's schedule\n")
+
+
+
+# psa -e hbrown5@una.edu
+def psa(cmd_list):
+    url = 'https://quanthu.life/tutorapp/users/role/STUDENT'
+    is_found = True
+    
+    if cmd_list[1] == '-e':
+        req = requests.get(url)
+        students = json.loads(req.text)
+
+        if students['errorCode'] == 200:
+            for student in students['data']:
+                if cmd_list[2] == student['email']:
+                    is_found = True
+                    del_id = student['_id']
+                    del_url = 'https://quanthu.life/tutorapp/users/' + del_id
+                    del_stud = requests.delete(del_url)
+                    del_resp = json.loads(del_stud.text)
+                
+                    if del_resp['errorCode'] == 200:
+                        print('User has been successfully deleted')
+                    else:
+                        print(del_resp['message'])
+                        
+                else: is_found = False
+                
+            if is_found == False:
+                print('Invalid student account')
+
+        elif students['errorCode'] == 404:
+            print(students['errorCode'])
+
+    else:
+        print('Error: Invalid argument(s)')
+
+     
+  
 
 def papt():
-    print("Purge an appointment by given date")
+    print("Purge an appointment by given date\n")
+
+
 
 def rnrpt():
-    print("Run a given report")
+    if cmd_list == '-a':
+        print('List of admins/n')
+
+    elif cmd_list == '-f':
+        print('List of faculty members/n')
+
+    elif cmd_list == '-s':
+        print('List of distinct students tutored by date range/n')
+
+    elif cmd_list == '-t':
+        print('List of tutoring appointments by date range/n')
+
+    elif cmd_list == '-d':
+        print('List of distinct students tutored by tutor and date range/n')
+
+    elif cmd_list == '-u':
+        print('Total number of hours unused by tutor by date range/n')
+
+    elif cmd_list == '-c':
+        print('Total hours available by course by date range/n')
+
+    elif cmd_list[1] == '-l':
+        print('List of tutors and their availability schedules/n')
+
+    elif cmd_list == '-p':
+        print('Student activity by date range and course(scheduled and completed)/n')
+
+    elif cmd_list == '-r':
+        print('Tutor activity by date range and course (scheduled and completed)/n')
+
+    else:
+        print('Error: Invalid argument(s)')
 
 def srpt():
     print("Schedule a report to be emailed periodically")
 
 def gethelp():
-    infile = open("help_admin.txt", "r")
-
+    infile = open("help_faculty.txt", "r")
     lines = infile.readlines()
 
     for line in lines:
         print(line, end = "")
 
-    print()
-	    
+    print()   
     infile.close()
 
-if __name__ == '__main__':
-    admin_loop('hbrown7@una.edu')

@@ -3,194 +3,256 @@ import requests
 from requests.exceptions import HTTPError
 import json
 from utilities import clear_screen
+from utilities import psr
 
-def studentloop(usr):   #note change this name maybe
-    name = usr.split("@")[0]
-    cmd = ""
+def student_loop(usr):
+    cmd = ''
     
-    while cmd != "logout":
+    while cmd != 'logout':
     
         try:
-            cmd = (input(f'{name}> '))
+            cmd = (input(f'{usr}> '))
             cmdlist = cmd.split()
                 
-            if len(cmdlist) == 1 and cmdlist[0] == "edact":
-                edact()
+            if len(cmdlist) == 5 and cmdlist[0] == 'edact':
+                edact(usr, cmdlist)
                 
-            elif len(cmdlist) == 1 and cmdlist[0] == "vtut":
+            elif len(cmdlist) == 1 and cmdlist[0] == 'vtut':
                 print()
                 vtut()
+
+            elif len(cmdlist) == 9 and cmdlist[0] == 'aapt':
+                aapt(cmdlist, usr)
                 
-            elif cmdlist[0] == "aapt":
-                aapt(cmdlist)
-                
-            elif cmdlist[0] == "edapt":   
+            elif cmdlist[0] == 'edapt':   
                 edapt(cmdlist)
                 
-            elif cmdlist[0] == "dapt":
+            elif cmdlist[0] == 'dapt':
                 dapt(cmdlist)
                 
-            elif len(cmdlist) == 1 and cmdlist[0] == "emcon":
+            elif len(cmdlist) == 1 and cmdlist[0] == 'emcon':
                 emcon()
                 
-            elif len(cmdlist) == 1 and cmdlist[0] == "emrem":
+            elif len(cmdlist) == 1 and cmdlist[0] == 'emrem':
                 emrem()
                 
-            elif len(cmdlist) == 1 and cmdlist[0] == "psr":   #note some of these might actually need more params
-                curStudent.pswrdReset()
+            elif len(cmdlist) == 1 and cmdlist[0] == 'psr': 
+                psr(usr)
                 
-            elif len(cmdlist) == 1 and cmdlist[0] == "--help":  #do we want it to be --help or just help
+            elif len(cmdlist) == 1 and cmdlist[0] == '--help':  
                 gethelp()
 
-            elif len(cmdlist) == 1 and cmdlist[0] == "clear":
+            elif len(cmdlist) == 1 and cmdlist[0] == 'clear':
                 clear_screen()
                 
-            elif cmd != "logout":
-                print("Error: Invalid command")
-
+            elif cmd != 'logout':
+                print('Error: Invalid command')
+        
         except IndexError as ind:
-            print("Error: Wrong number of arguements")
-            continue
+            if cmd == '\r' or '\n': continue
+            else:
+                print('Error: Wrong number of arguments')
+                continue
         except HTTPError as http_err:
-            print(f'HTTP Error occured: {http_err}')
+            print(f'HTTP Error: {http_err}')
             continue
         except KeyboardInterrupt as kybrd:
-            cmd = "logout"
-            continue
+            cmd = 'logout'
+            print()
+        
         except Exception as err:
             print(f'Error: {err}')
             continue
-
-
-#below are all the student function definitions:
+        
     
+# edact -u new -p new
+def edact(usr, cmdlist):
+    url = 'https://quanthu.life/tutorapp/users'
+    usrs = requests.get(url)
+    usrs_resp = json.loads(usrs.text)
+    
+    data = {}
+    is_found, _id = True, ''
 
-def edact(cmdlist):
-    print("edit account")
+    if cmdlist[1] == '-u' and cmdlist[3] == '-p':
+        for item in usrs_resp['data']:
+            if usr == item['username']:
+                _id = item['_id']
+                
+                data = {'_id': item['_id'],
+                        'username': cmdlist[2],
+                        'email': item['email'],
+                        'password': item['password'],
+                        'phone': cmdlist[4],
+                        'role': item['role'],
+                        'lastActivityDateTime': item['lastActivityDateTime'],
+                        'isActive': item['isActive']
+                    }
+                is_found = True
+                url = url + "/" + _id
+                put_req = requests.put(url, json = data)
+                resp = json.loads(put_req.text)
+                if resp['errorCode'] == 200:
+                    print('Your account has been successfully edited')
+                else:
+                    print('Your account was not edited successfully') 
+                break
+            else: is_found = False
+            
+
+        #update username
+
+    else:
+        print('Error: Wrong argument passed')
     
 
 def vtut():
-    try:
-        url = 'https://quanthu.life/tutorapp/schedule'
+    url = 'https://quanthu.life/tutorapp/schedule'
 
-        x = requests.get(url)
-        resp = json.loads(x.text)
+    x = requests.get(url)
+    resp = json.loads(x.text)
         
-        col_width = 0
-        for users in resp['data']:
-            if col_width < len(users['tutor_id']):
-                col_width = len(users['tutor_id'])
+    col_width = 0
+    for users in resp['data']:
+        if col_width < len(users['tutor_id']):
+            col_width = len(users['tutor_id'])
                 
-        print('Tutor ID', '%13s'%'Date', '%17s'%'Start Time', '%15s'%'End Time')
-        print('=========================================================')
+    print('\tTutor ID', '%20s'%'Date', '%20s'%'Start Time', '%15s'%'End Time')
+    print('==============================================================='\
+                '===============')
 
-        for users in resp['data']:
-            print(users['tutor_id'].center(col_width),
-                  '%15s'% users['date'].ljust(col_width),
-                  '%15s'% users['from_time'].center(col_width),
-                  '%15s' %users['end_time'].center(col_width))
-            
-    except HTTPError as http_err:
-        print(f'HTTP error occured: {http_err}')
-    except Exception as err:
-        print(f'Error: {err}')    
+    for users in resp['data']:
+        print(users['tutor_id'],
+            '%30s'% users['weekday'],
+            '%15s'% users['from_time'].center(5),
+            '%15s' %users['end_time'].center(5))
+    print()
 
 
 
+def aapt(cmdlist, usr):
+    url = 'https://quanthu.life/tutorapp/appointment'
 
-'''
--t Tutor
--c Course
--d Date
--s Time
-'''
-# aapt -t Jalen Jones -c CS355 -d 4/16/2021 -t 1200
-def aapt(cmdlist):
-    infile = open("appointments.txt", "a")
-
-    if len(cmdlist) < 10:
-        print("Error: wrong number of arguements")
+    if cmdlist[1] == '-t' and cmdlist[3] == '-d' and cmdlist[5] == '-f' \
+       and cmdlist[7] == '-e':
         
-    elif cmdlist[4] == '-c':
-        tutor = cmdlist[2] + " " + cmdlist[3]
-        subj = cmdlist[5]
-        date = cmdlist[7]
-        time = cmdlist[9]
-        infile.write(tutor + " " + subj + " "  + date + " " + time + "\n")
+        # First validate the tutor username that was passed
+        tutor_id = str(cmdlist[2])
+        tutor_url = 'http://quanthu.life:8000/users/role/TUTOR'
+        is_found = False
         
+        tutor_req = requests.get(tutor_url)
+        tutors = json.loads(tutor_req.text)
+
+        # Loop through the list of tutors if request is successful
+        if tutors['errorCode'] == 200:
+            for tutor in tutors['data']:
+                if tutor_id == tutor['username']:
+                    is_found = True
+        else:
+            print(tutors['errorCode'])
+
+        if is_found == True:
+            new_date = str(cmdlist[4])
+            from_time = str(cmdlist[6])
+            end_time = str(cmdlist[8])
+
+            data = {'tutor_id': tutor_id,
+                    'student_id': usr,
+                    'date': new_date,
+                    'from_time': from_time,
+                    'end_time': end_time,
+                    'isCompleted': False,
+                    'isActive': True
+                    }
+
+            req = requests.post(url, json = data)
+            resp = json.loads(req.text)
+
+            if resp['errorCode'] == 200:
+                print('New appointment has been scheduled')
+            else:
+                print(resp['errorCode'])
+        else:
+            print('Invalid tutor username')
+
     else:
-        print("Error: invalid arguement placement")
-    
-    infile.close()
-    print("Appointment has been added and scheduled")
+        print('Error: Invalid argument(s)')
+
 
 
 def edapt(cmdlist):
-    infile = open("appointments.txt", "a")
+    if cmdlist[1] == '-t' and cmdlist[3] == '-d' and cmdlist[5] == '-f' \
+       and cmdlist[7] == '-e':
+        
+        newTut = str(cmdlist[2])
+        url = 'https://quanthu.life/tutorapp/users/role/TUTOR'
+        is_found = True
+        
+        tut_req = requests.get(url)
+        tuts = json.loads(tut_req.text)
 
-    if len(cmdlist) < 10:
-        print("Error: wrong number of arguements")
-    elif cmdlist[4] == '-c':
-        name = cmdlist[2] + " " + cmdlist[3]
-        course = cmdlist[5]
-        day = cmdlist[7]
-        time = cmdlist[9]
-        infile.write(name + " " + course + " "  + day + " " + time + "\n")
-    else:
-        print("Error: invalid arguement placement")
-    
-    infile.close()    
-    print("Appointment has been edited")
+        for item in tuts['data']:
+            if newTut == item['username']:
+                tut_usr = item['username']
+                is_found = True
+                break
+                
+            else: is_found = False
 
-# dapt -t Jalen Jones -c CS355 -d 4/16/2021 -t 1200
-def dapt(cmdlist):
-    ctr = 0
-    infile = open("appointments.txt", "r")
-    
-    if len(cmdlist) < 10:
-        print("Error: wrong number of arguements")
-    elif cmdlist[4] == '-c':
-        lines = infile.readlines()
-        infile.close()
-
-        command = cmdlist[2] + " " + cmdlist[3] + " " + cmdlist[5] + " " +\
-                  cmdlist[7] + " " + cmdlist[9]
-
-        for line in lines:
-            if line[ctr] == command[ctr]:
-                print()
-                #Deletion command goes here
-            ctr = ctr + 1
-
-        infile = open("appointments.txt", "w+")
-
-        for line in lines:
-            infile.write(line)
-    else:
-        print("Error: invalid arguement placement")
+        if is_found == False:
+            print('Invalid Tutor ID')
             
-    infile.close()
-    print("Appointment has been deleted")
+        else:
+            apt_url = 'https://quanthu.life/tutorapp/appointment'
+            apt_req = requests.get(apt_url)
+            apt_resp = json.loads(apt_req.text)
+            
+            for item in apt_resp['data']:
+                if newTut == item['tutor_id']:
+                    _id = item['_id']
+                    put_url = apt_url + "/" +  _id
+                    data = {"_id": item["_id"],
+                            "tutor_id": newTut,
+                            "student_id": item['student_id'],
+                            "date": cmdlist[4],
+                            "from_time": cmdlist[6],
+                            "end_time": cmdlist[8],
+                            "isCompleted": False,
+                            "isActive": True}
+                    
+                    put_req = requests.put(put_url, json = data)
+                    put_resp = json.loads(put_req.text)
+                    print(put_resp['message'])
+                else:
+                    print('Tutor not found')
 
+        
+
+def dapt(cmdlist):
+    _id = input("Enter the id of the appointment you would like to delete: ")
+
+    url = 'http://quanthu.life:8000/appointment/' + _id
+    response = requests.delete(url)
+    
+    if response.status_code == 200:
+        print("Successfully deleted selected appointment")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def emcon():
-    print("emial conrimation")
+    print("Waiting on server...\n")
     
 def emrem():
-    print("email reminder")
+    print("Waiting on server...\n")
     
 def gethelp():
-	infile = open("help_student.txt", "r")
+    infile = open("help_student.txt", "r")
+    lines = infile.readlines()
 
-	lines = infile.readlines()
-
-	for line in lines:
-		print(line, end = "")
-
-	print()
-	    
-	infile.close()
-
-if __name__ == '__main__':
-    vtut()
+    for line in lines:
+        print(line, end = "")
+	
+    print()
+    infile.close()
 
