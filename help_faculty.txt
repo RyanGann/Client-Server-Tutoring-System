@@ -1,3 +1,8 @@
-rnrpt	Run given report
-srpt	Schedule a report to be emailed periodically
-psr	Password reset that takes old and then new password
+rnrpt	-l    List of tutors and their availability schedules
+rnrpt -p    Student activity by date range and course (scheduled and completed)
+rnrpt -r    Tutor activity by date range and course (scheduled and completed)
+srpt        Schedule a report to be emailed periodically
+psr         Password reset that takes old and then new password
+
+
+
