@@ -4,14 +4,14 @@ edact -u <username> -p <number>
 vtut 
 	View list of tutors
 
-aapt -t <tutor name> -c <class> -d <MM/DD/YYYY> -t <time>
+aapt -t <tutor name> -d <MM/DD/YYYY> -f <start time> -e <end time>
 	Add appointment by a given date, tutor, and course number
 
-edapt -t <tutor name> -c <class> -d <MM/DD/YYYY> -t <time>
+edapt -t <tutor name> -d <MM/DD/YYYY> -f <start time> -e <end time>
 	Edit current appointment with new date, tutor, or course number
 
-dapt -t <tutor name> -c <class> -d <MM/DD/YYYY> -t <time>
-	Delete appointment by a given date, tutor, and course number
+dapt
+	Delete appointment by a given id
 
 emcon -d <date>
 	Send an email confirmation of appointment to student email provided a given date

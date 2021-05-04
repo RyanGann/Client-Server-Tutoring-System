@@ -1,6 +1,7 @@
 
 import requests
 import json
+from utilities import clear_screen
 
 def tutorloop(usr, pswrd):
     #curTutor = Tutor(usr, pswrd)
@@ -19,7 +20,7 @@ def tutorloop(usr, pswrd):
             elif cmdList[0] == "capt":
                 capt()
             elif cmdList[0] == "aapt":
-                aapt(cmdList[1], cmdList[2], cmdList[3], cmdList[4])
+                aapt()
             elif cmdList[0] == "edapt":
                 edapt()
             elif cmdList[0] == "dapt":
@@ -27,7 +28,7 @@ def tutorloop(usr, pswrd):
             elif cmdList[0] == "--help":
                 getHelp()
             elif cmdList[0] == "psr":
-                curTutor.pswrdReset()
+                pswrdReset()
             elif cmdList[0] == 'exit':
                 clear_screen()
                 return
@@ -42,24 +43,9 @@ def tutorloop(usr, pswrd):
 # This function prints all appointments by tutor _id
 def papt(usr):
     #print("Get all current appointments from server")
+    tutor_id = input("Enter tutor id")
     
-    users_url = 'https://quanthu.life/tutorapp/users'
-    x = requests.get(users_url)
-    users = json.loads(x.text)
-    if users['errorCode'] == 200:
-      print(users['message'])
-    elif users['errorCode'] == 404:
-      print(users['message'])
-
-    for item in users['data']:
-      if usr == item['username']:
-        print("inside if inside for")
-        tutor_id = item['_id']
-        print(tutor_id)
-        break
-
-    
-    url = 'http://quanthu.life:8000/schedule/'
+    url = 'http://quanthu.life:8000/appointment/'
     tutor_url = url + tutor_id
     x = requests.get(tutor_url)
     tutor_sched = json.loads(x.text)
@@ -72,10 +58,17 @@ def papt(usr):
     
 
 def capt():
-    print("hey")
+    id = input("Enter the appointment id that you would like to complete: ")
     
 def aapt(id, date, from_time, end_time):
-    url = 'http://quanthu.life:8000/schedule'
+
+    id = input("Enter tutor_id: ")
+    date = input("Enter date of appointment: ")
+    from_time = input("Enter start time of appointment: ")
+    end_time = input("Enter end time of appointment: ")
+
+
+    url = 'http://quanthu.life:8000/appointment/'
     data = {'tutor_id': id,
             'date': date,
             'from time': from_time,
@@ -84,10 +77,40 @@ def aapt(id, date, from_time, end_time):
     x = requests.post(url, json = data)
 
 def edapt():
-    print("Edit appointment with new date, student, or course number")
+    id = input("Enter the id of the appointment you would like to edit: ")
+
+    tutor_id = input("Enter the id of the tutor: ")
+    student_id = input("Enter the id of the student: ")
+    date = input("Enter the date of the appointment: ")
+    from_time = input("Enter the start time of the appointment: ")
+    end_time = input("Enter the end time of the appointment: ")
+
+    data = {
+        "_id": id,
+        "tutor_id": tutor_id,
+        "student_id": student_id,
+        "date": date,
+        "from_time": from_time,
+        "end_time": end_time
+    }
+
+    url = 'http://quanthu.life:8000/appointment/' + id
+    response = requests.put(url, json = data)
+
+    if response.status_code == 200:
+        print("Successfully edited selected admin")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def dapt():
-    print("Delete an appointment by given date, student, and course number")
+    id = input("Enter the id of the appointment you'd like to delete: ")
+
+    url = 'http://quanthu.life:8000/appointment/' + id
+    response = requests.delete(url, data = "deleting appointment")
+    if response.status_code == 200:
+        print("Successfully edited selected admin")
+    elif response.status_code == 404:
+        print("Unsuccessful request")
 
 def getHelp():
 	infile = open("help_tutor.txt", "r")

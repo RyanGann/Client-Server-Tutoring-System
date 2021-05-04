@@ -1,17 +1,44 @@
-adad	Add a new admin with an email, name, and password
-edad	Edit an admin's email, name, or password
-delad	Delete an admin's account
-adfac	Add a new faculty with an email, name, and password
-edfac	Edit a faculty's email, name, or password
-delfac	Delete a faculty's account
-adtut	Add a new tutor with an email, name, and password
-edtut	Edit a tutor's email, name, or password
-deltut	Delete a tutor's accountd
-adts	Add a new availability schedule for a given tutor
-edts	Edit a given tutor's availability schedule
-delts	Delete a given tutor's availability schedule
-psa	Purge a given student's account
-papt	Purge appointment data by given date
+adad -e <email>
+  Add a new admin with an email, name, and password
+
+edad	-u <username>
+  Edit an admin's username
+
+delad	-u <username>
+  Delete an admin's account
+
+adfac -e <email>
+  Add a new faculty with an email, name, and password
+
+edfac -u <username>
+  Edit a faculty's email, name, or password
+
+delfac -u <username>
+  Delete a faculty's account
+  
+adtut -e <email>
+  Add a new tutor with an email, name, and password
+  
+edtut -u <username>
+  Edit a tutor's email, name, or password
+  
+deltut -u <username>
+  Delete a tutor's account
+  
+adts -u <username> -d <dateTime> -f <fromTime> -e <endTime> 
+  Add a new availability schedule for a given tutor
+
+edts -u <username> -d <dateTime> -f <fromTime> -e <endTime> 
+  Edit a given tutor's availability schedule
+  
+delts -u <username> -d <dateTime> -f <fromTime> -e <endTime> 
+  Delete a given tutor's availability schedule
+  
+psa -e <email>
+  Purge a given student's account
+  
+papt  -d <date>
+  Purge appointment data by given date
 
 rnrpt	Run given report
   rnrpt -a    List of admins
@@ -25,5 +52,14 @@ rnrpt	Run given report
   rnrpt -p    Student activity by date range and course (scheduled and completed)
   rnrpt -r    Tutor activity by date range and course (scheduled and completed)
 
-srpt	Schedule a report to be emailed periodically
-psr	Password reset that takes old and then new password
+srpt
+  Schedule a report to be emailed periodically
+
+psr
+  Password reset that takes old and then new password
+
+clear
+  Clears the screen.
+  
+logout
+  Go back to login page.
