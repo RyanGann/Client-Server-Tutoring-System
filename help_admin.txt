@@ -1,7 +1,7 @@
 adad -e <email>
   Add a new admin with an email, name, and password
 
-edad	-u <username>
+edad	-u <username> -n <newUsername> -p <newPhoneNumber>
   Edit an admin's username
 
 delad	-u <username>
@@ -10,7 +10,7 @@ delad	-u <username>
 adfac -e <email>
   Add a new faculty with an email, name, and password
 
-edfac -u <username>
+edfac -u <username> -n <newUsername> -p <newPhoneNumber>
   Edit a faculty's email, name, or password
 
 delfac -u <username>
@@ -19,7 +19,7 @@ delfac -u <username>
 adtut -e <email>
   Add a new tutor with an email, name, and password
   
-edtut -u <username>
+edtut -u <username> -n <newUsername> -p <newPhoneNumber>
   Edit a tutor's email, name, or password
   
 deltut -u <username>
