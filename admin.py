@@ -17,7 +17,7 @@ def admin_loop(usr):
                 add_account(cmd_list, 'ADMIN')
             
             elif cmd_list[0] == 'edad':
-                edad()
+                edit_account(cmd_list, 'ADMIN')
 
             elif len(cmd_list) == 3 and cmd_list[0] == 'delad':
                 del_account(cmd_list)
@@ -26,7 +26,7 @@ def admin_loop(usr):
                 add_account(cmd_list, 'FACULTY')
 
             elif cmd_list[0] == 'edfac':
-                edfac()
+                edit_account(cmd_list, 'FACULTY')
 
             elif cmd_list[0] == 'delfac':
                 del_account(cmd_list)
@@ -35,7 +35,7 @@ def admin_loop(usr):
                 add_account(cmd_list, 'TUTOR')
 
             elif cmd_list[0] == 'edtut':
-                edtut()
+                edit_account(cmd_list, 'TUTOR')
 
             elif cmd_list[0] == 'deltut':
                 del_account(cmd_list)
@@ -149,19 +149,44 @@ def del_account(cmd_list):
        print('Error: invalid arguement(s)')
         
 
+#edad -u usrname -n newUsr -p phones
+def edit_account(cmdlist, role):
+    url = 'https://quanthu.life/tutorapp/users/role/' + role
+    usrs = requests.get(url)
+    usrs_resp = json.loads(usrs.text)
+    
+    data = {}
+    is_found, _id = True, ''
 
-def edad():
-    print("Edit an admin's email, name, or password\n")
+    if cmdlist[1] == '-u' and cmdlist[3] == '-n' and cmdlist[5] == '-p':
+        for item in usrs_resp['data']:
+            if cmdlist[2] == item['username']:
+                
+                data = {'_id': item['_id'],
+                        'username': cmdlist[4],
+                        'email': item['email'],
+                        'password': item['password'],
+                        'phone': cmdlist[6],
+                        'role': item['role'],
+                        'lastActivityDateTime': item['lastActivityDateTime'],
+                        'isActive': item['isActive']}
+                is_found = True
+                
+                url = 'https://quanthu.life/tutorapp/users/' + item['_id']
+                put_req = requests.put(url, json = data)
+                resp = json.loads(put_req.text)
+                if resp['errorCode'] == 200:
+                    print('Your account has been successfully edited')
+                else:
+                    print('Your account was not edited successfully') 
+                break
+            else: is_found = False
+            
 
+        #update username
 
-
-def edfac():
-    print("Edit a faculty's email, name, or password]n")
-
-
-
-def edtut():
-    print("Edit a tutor's email, name, or password\n")
+    else:
+        print('Error: Wrong argument passed')
 
 
 
