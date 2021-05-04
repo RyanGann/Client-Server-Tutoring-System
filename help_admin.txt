@@ -12,6 +12,18 @@ edts	Edit a given tutor's availability schedule
 delts	Delete a given tutor's availability schedule
 psa	Purge a given student's account
 papt	Purge appointment data by given date
+
 rnrpt	Run given report
+  rnrpt -a    List of admins
+  rnrpt -f    List of faculty members
+  rnrpt -s    List of distinct students tutored by date range
+  rnrpt -t    List of tutoring appointments by date range
+  rnrpt -d    List of distinct students tutored by tutor and date range
+  rnrpt -u    Total number of hours unused by tutor by date range
+  rnrpt -c    Total hours available by course by date range
+  rnrpt -l    List of tutors and their availability schedules
+  rnrpt -p    Student activity by date range and course (scheduled and completed)
+  rnrpt -r    Tutor activity by date range and course (scheduled and completed)
+
 srpt	Schedule a report to be emailed periodically
 psr	Password reset that takes old and then new password
