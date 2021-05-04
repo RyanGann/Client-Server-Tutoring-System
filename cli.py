@@ -14,7 +14,7 @@ Help page for dashboard
 '''
 def getHelp():
    print('\nEnter \'login\' to login')
-   print('Enter \'regact -u <portal_email>\' to register an account')
+   print('Enter \'regact -e <portal_email>\' to register an account')
    print('Enter \'exit\' to quit')
    print('Enter \'clear\' to clear the screen\n')
          
