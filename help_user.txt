@@ -1,0 +1,4 @@
+Enter "login" to login
+Enter "regact -e <portal_email>" to register an account
+Enter "exit" to quit
+Enter "clear" to clear the screen.
