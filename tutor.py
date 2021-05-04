@@ -3,7 +3,7 @@ import requests
 import json
 from utilities import clear_screen
 
-def tutorloop(usr, pswrd):
+def tutor_loop(usr, pswrd):
     #curTutor = Tutor(usr, pswrd)
     #getSched(usr)
     name = usr.split("@")[0]
