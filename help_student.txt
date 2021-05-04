@@ -1,32 +1,29 @@
-regact
-		Register account with given email and password
+edact -u <username> -p <number>
+	Edit account details (name, phone number)
 
-edact
-		Edit account details (name, phone number)
-
-vtut
-		View list of tutors by given date and course number
+vtut 
+	View list of tutors
 
 aapt -t <tutor name> -c <class> -d <MM/DD/YYYY> -t <time>
-		Add appointment by a given date, tutor, and course number
+	Add appointment by a given date, tutor, and course number
 
 edapt -t <tutor name> -c <class> -d <MM/DD/YYYY> -t <time>
-		Edit current appointment with new date, tutor, or course number
+	Edit current appointment with new date, tutor, or course number
 
 dapt -t <tutor name> -c <class> -d <MM/DD/YYYY> -t <time>
-		Delete appointment by a given date, tutor, and course number
+	Delete appointment by a given date, tutor, and course number
 
-emcon
-		Send an email confirmation of appointment to student email provided a given date
+emcon -d <date>
+	Send an email confirmation of appointment to student email provided a given date
 
-emrem
-		Send an email reminder of appointmentto student email provided a given date
+emrem -d <date>
+	Send an email reminder of appointmentto student email provided a given date
 
 psr
-		Password reset that takes old and then new password
+	Password reset that takes old and then new password
 
 clear
-		Clears the screen
+	Clears the screen
 
 logout
-		To logout
+	To logout
